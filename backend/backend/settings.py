@@ -1,14 +1,19 @@
 import os
+import warnings
+from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.getenv('SECRET_KEY')
+if not SECRET_KEY:
+    warnings.warn("SECRET_KEY нет в числе переменных окружения." \
+        "Используется случайная генерация ключа", RuntimeWarning)
+    SECRET_KEY = get_random_secret_key()
 
-SECRET_KEY = 'django-insecure-j_89af+30&&4qm*8z9_(^zz8p4-ho8z_m6ylm0s$h!-p@on1_^'
+DEBUG = os.getenv('DEBUG')=='True'
 
-DEBUG = True
-
-ALLOWED_HOSTS = ['localhost', '123.123.123.123', 'alexkot.myddns.me', 'alexkot.onthewifi.com']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
